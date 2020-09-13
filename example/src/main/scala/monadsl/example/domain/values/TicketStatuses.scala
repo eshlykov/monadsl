@@ -1,7 +1,5 @@
 package monadsl.example.domain.values
 
-import play.api.libs.json.{Format, Json}
-
 object TicketStatuses extends Enumeration {
   type TicketStatus = Value
 

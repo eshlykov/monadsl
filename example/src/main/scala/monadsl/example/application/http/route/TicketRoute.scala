@@ -1,20 +1,20 @@
-package monadsl.example.application.route
+package monadsl.example.application.http.route
 
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.{RequestContext, Route, RouteResult}
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
-import monadsl.example.application.protocol.{TicketDto, TicketProjectionDto}
+import monadsl.example.application.http.protocol.{CommentDto, TicketDto, TicketProjectionDto}
 import monadsl.example.domain.services.{TicketFactory, TicketRepository, TicketService}
 import play.api.libs.json.{JsObject, Writes}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class TicketRoute(ticketFactory: TicketFactory,
                   ticketService: TicketService,
                   ticketRepository: TicketRepository)
-                 (implicit executionContext: ExecutionContext) {
+                 (implicit executionContext: ExecutionContext) extends Route {
 
-  val route: Route =
+  override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("tickets") {
       path("new") {
         createTicket()
@@ -26,15 +26,16 @@ class TicketRoute(ticketFactory: TicketFactory,
         }
       }
     }
+  }.apply(v1)
 
   private implicit lazy val unitWrites: Writes[Unit] = (_: Unit) => JsObject.empty
 
   private def createTicket(): Route =
-    (post & entity(as[TicketProjectionDto])) { ticket =>
+    (post & entity(as[TicketProjectionDto])) { body =>
       complete {
         ticketFactory.create(
-          name = ticket.name,
-          description = ticket.description,
+          name = body.name,
+          description = body.description,
         )
       }
     }
@@ -48,9 +49,9 @@ class TicketRoute(ticketFactory: TicketFactory,
     }
 
   private def passStage(ticketId: String): Route =
-    post {
+    (post & entity(as[CommentDto])) { body =>
       complete {
-        ticketService.passCurrentStage(ticketId)
+        ticketService.passCurrentStage(ticketId, body.comment)
       }
     }
 }

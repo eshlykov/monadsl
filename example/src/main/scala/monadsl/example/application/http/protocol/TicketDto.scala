@@ -1,4 +1,4 @@
-package monadsl.example.application.protocol
+package monadsl.example.application.http.protocol
 
 import monadsl.example.domain.entities.Ticket
 import monadsl.example.domain.values.TicketStatuses
