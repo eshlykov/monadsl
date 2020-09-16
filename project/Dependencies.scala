@@ -29,6 +29,8 @@ object Example extends Dependencies {
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
     "com.softwaremill.macwire" %% "macros" % macrosVersion,
     "com.typesafe.slick" %% "slick" % slickVersion,
+    "com.typesafe.slick" %% "slick-hikaricp" % slickHikaricpVersion,
+    "org.postgresql" % "postgresql" % postgresqlVersion,
     "com.softwaremill.common" %% "id-generator" % idGeneratorVersion,
     "org.typelevel" %% "cats-core" % catsCoreVersion
   )

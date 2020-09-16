@@ -33,18 +33,14 @@ class TicketRoute(ticketFactory: TicketFactory,
   private def createTicket(): Route =
     (post & entity(as[TicketProjectionDto])) { body =>
       complete {
-        ticketFactory.create(
-          name = body.name,
-          description = body.description,
-        )
+        ticketFactory.create(body.name, body.description)
       }
     }
 
   private def getTicket(ticketId: String): Route =
     get {
       complete {
-        ticketRepository.get(ticketId)
-          .map(TicketDto.apply)
+        ticketRepository.get(ticketId).map(TicketDto(_))
       }
     }
 
