@@ -1,8 +1,7 @@
 package monadsl.example.presentation
 
-import akka.http.scaladsl.server.{Route, RouteConcatenation}
 import akka.http.scaladsl.server.Directives._
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import akka.http.scaladsl.server.{Route, RouteConcatenation}
 import io.swagger.v3.core.util.Yaml
 import io.swagger.v3.jaxrs2.Reader
 import io.swagger.v3.oas.integration.SwaggerConfiguration
