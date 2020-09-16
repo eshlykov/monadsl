@@ -7,10 +7,9 @@ import play.api.libs.json.{Format, Json}
 
 case class TicketDto(id: String,
                      name: String,
-                     description: String,
+                     description: Option[String],
                      status: TicketStatus,
-                     comment: String) {
-}
+                     comment: Option[String])
 
 object TicketDto {
   implicit lazy val ticketDtoFormat: Format[TicketDto] = Json.format[TicketDto]
@@ -19,9 +18,9 @@ object TicketDto {
     TicketDto(
       id = ticket.id,
       name = ticket.name,
-      description = ticket.description,
+      description = ticket.descriptionOpt,
       status = ticket.status,
-      comment = ticket.comment,
+      comment = ticket.commentOpt,
     )
 
   private implicit lazy val ticketStatusesFormat: Format[TicketStatus] = Json.formatEnum(TicketStatuses)

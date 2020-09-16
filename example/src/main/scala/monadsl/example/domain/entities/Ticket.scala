@@ -6,9 +6,9 @@ import play.api.libs.json.{Format, Json}
 
 case class Ticket(id: String,
                   name: String,
-                  description: String,
+                  descriptionOpt: Option[String],
                   status: TicketStatus,
-                  comment: String)
+                  commentOpt: Option[String])
 
 object Ticket {
   implicit lazy val ticketFormat: Format[Ticket] = Json.format[Ticket]

@@ -27,6 +27,7 @@ object Example extends Dependencies {
     "javax.ws.rs" % "jsr311-api" % jsr311apiVersion,
     "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
-    "com.softwaremill.macwire" %% "macros" % macrosVersion
+    "com.softwaremill.macwire" %% "macros" % macrosVersion,
+    "com.typesafe.slick" %% "slick" % slickVersion
   )
 }
