@@ -28,6 +28,8 @@ object Example extends Dependencies {
     "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
     "com.softwaremill.macwire" %% "macros" % macrosVersion,
-    "com.typesafe.slick" %% "slick" % slickVersion
+    "com.typesafe.slick" %% "slick" % slickVersion,
+    "com.softwaremill.common" %% "id-generator" % idGeneratorVersion,
+    "org.typelevel" %% "cats-core" % catsCoreVersion
   )
 }

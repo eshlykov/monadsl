@@ -15,6 +15,7 @@ object Versions {
   val swaggerUiVersion: String = "3.32.5"
   val webjarsLocatorVersion: String = "0.40"
   val slickVersion: String = "3.3.3"
+  val idGeneratorVersion: String = "1.2.1"
 
   private lazy val akkaVersion = "2.6.8"
   private lazy val swaggerVersion = "2.1.4"
