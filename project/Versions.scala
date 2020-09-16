@@ -11,7 +11,7 @@ object Versions {
   val macrosVersion: String = "2.3.6"
   val swaggerCoreVersion: String = swaggerVersion
   val swaggerJaxrs2Version: String = swaggerVersion
-  val jsr311apiVersion: String = "1.1.1"
+  val jsr311ApiVersion: String = "1.1.1"
   val swaggerUiVersion: String = "3.32.5"
   val webjarsLocatorVersion: String = "0.40"
   val slickVersion: String = "3.3.3"

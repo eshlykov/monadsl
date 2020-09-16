@@ -15,23 +15,23 @@ object Monadsl extends Dependencies {
 
 object Example extends Dependencies {
   override val dependencies: Seq[ModuleID] = Seq(
-    "com.typesafe.akka" %% "akka-stream" % akkaStreamVersion,
+    "ch.qos.logback" % "logback-classic" % logbackClassicVersion,
+    "com.softwaremill.common" %% "id-generator" % idGeneratorVersion,
+    "com.softwaremill.macwire" %% "macros" % macrosVersion,
     "com.typesafe.akka" %% "akka-actor" % akkaActorVersion,
     "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
-    "ch.qos.logback" % "logback-classic" % logbackClassicVersion,
-    "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
+    "com.typesafe.akka" %% "akka-stream" % akkaStreamVersion,
     "com.typesafe.play" %% "play-json" % playJsonVersion,
+    "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion,
+    "com.typesafe.slick" %% "slick" % slickVersion,
+    "com.typesafe.slick" %% "slick-hikaricp" % slickHikaricpVersion,
     "de.heikoseeberger" %% "akka-http-play-json" % akkaHttpPlayJsonVersion,
     "io.swagger.core.v3" % "swagger-core" % swaggerCoreVersion,
     "io.swagger.core.v3" % "swagger-jaxrs2" % swaggerJaxrs2Version,
-    "javax.ws.rs" % "jsr311-api" % jsr311apiVersion,
-    "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
-    "org.webjars" % "swagger-ui" % swaggerUiVersion,
-    "com.softwaremill.macwire" %% "macros" % macrosVersion,
-    "com.typesafe.slick" %% "slick" % slickVersion,
-    "com.typesafe.slick" %% "slick-hikaricp" % slickHikaricpVersion,
+    "javax.ws.rs" % "jsr311-api" % jsr311ApiVersion,
     "org.postgresql" % "postgresql" % postgresqlVersion,
-    "com.softwaremill.common" %% "id-generator" % idGeneratorVersion,
-    "org.typelevel" %% "cats-core" % catsCoreVersion
+    "org.typelevel" %% "cats-core" % catsCoreVersion,
+    "org.webjars" % "swagger-ui" % swaggerUiVersion,
+    "org.webjars" % "webjars-locator" % webjarsLocatorVersion
   )
 }

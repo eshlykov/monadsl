@@ -19,8 +19,5 @@ trait PresentationLayer extends ApplicationLayer {
     reader.read(applicationRoutes.map(_.getClass).toSet[Class[_]].asJava)
   }
 
-  private lazy val uiRoute = {
-    val _ = Yaml.mapper().getFactory.asInstanceOf[YAMLFactory]
-    new SwaggerUiRoute(Yaml.pretty(openApi))
-  }
+  private lazy val uiRoute = new SwaggerUiRoute(Yaml.pretty(openApi))
 }
