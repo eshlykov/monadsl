@@ -16,6 +16,7 @@ object Monadsl extends Dependencies {
 object Example extends Dependencies {
   override val dependencies: Seq[ModuleID] = Seq(
     "ch.qos.logback" % "logback-classic" % logbackClassicVersion,
+    "com.github.swagger-akka-http" %% "swagger-scala-module" % swaggerScalaModuleVersion,
     "com.softwaremill.common" %% "id-generator" % idGeneratorVersion,
     "com.softwaremill.macwire" %% "macros" % macrosVersion,
     "com.typesafe.akka" %% "akka-actor" % akkaActorVersion,
