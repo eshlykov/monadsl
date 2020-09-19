@@ -1,0 +1,21 @@
+version: "3"
+services:
+  example:
+    container_name: example_local
+    build:
+      context: ./example/target/docker
+      dockerfile: Dockerfile
+    tty: true
+    network_mode: host
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres_local
+    image: postgres:13
+    environment:
+      POSTGRES_DB: example
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: su
+

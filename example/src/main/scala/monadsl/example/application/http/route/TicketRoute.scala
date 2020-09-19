@@ -40,8 +40,6 @@ class TicketRoute(ticketFactory: TicketFactory,
     }
   }.apply(v1)
 
-  private implicit lazy val unitWrites: Writes[Unit] = (_: Unit) => JsObject.empty
-
   @POST
   @Operation(summary = "Создать новую задачу")
   @RequestBody(
@@ -112,4 +110,6 @@ class TicketRoute(ticketFactory: TicketFactory,
         ticketService.passCurrentStage(ticketId, body.comment)
       }
     }
+
+  private implicit lazy val unitWrites: Writes[Unit] = (_: Unit) => JsObject.empty
 }
