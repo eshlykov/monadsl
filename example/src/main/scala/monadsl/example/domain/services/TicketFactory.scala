@@ -2,16 +2,17 @@ package monadsl.example.domain.services
 
 import com.softwaremill.id.pretty.PrettyIdGenerator
 import monadsl.example.domain.values.TicketStatuses
+import monadsl.example.infrastructure.model.{V1, Version}
 import monadsl.example.infrastructure.persistence.TicketDao
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait TicketFactory {
+trait TicketFactory[V <: Version] {
   def create(name: String, descriptionOpt: Option[String]): Future[String]
 }
 
-class TicketFactoryImpl(ticketDao: TicketDao)
-                       (implicit executionContext: ExecutionContext) extends TicketFactory {
+class TicketFactoryImpl[V <: Version](ticketDao: TicketDao[V])
+                                     (implicit executionContext: ExecutionContext) extends TicketFactory[V] {
   override def create(name: String, descriptionOpt: Option[String]): Future[String] = {
     val id = idGenerator.nextId()
     ticketDao.create(

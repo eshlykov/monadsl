@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import com.softwaremill.macwire.wire
 import com.typesafe.config.ConfigFactory
 import monadsl.example.infrastructure.liquibase.{LiquibaseConfig, LiquibaseService, LiquibaseServiceImpl}
-import monadsl.example.infrastructure.model.TicketModel
+import monadsl.example.infrastructure.model.{TicketModel, V1, V2}
 import monadsl.example.infrastructure.persistence.{TicketDao, TicketDaoImpl}
 import slick.jdbc.{JdbcProfile, PostgresProfile}
 
@@ -16,7 +16,8 @@ trait InfrastructureLayer {
 
   lazy val liquibaseService: LiquibaseService = wire[LiquibaseServiceImpl]
 
-  lazy val ticketDao: TicketDao = wire[TicketDaoImpl[BackEnd]]
+  lazy val ticketV1dao: TicketDao[V1] = wire[TicketDaoImpl[V1, BackEnd]]
+  lazy val ticketV2dao: TicketDao[V2] = wire[TicketDaoImpl[V2, BackEnd]]
 
   private type BackEnd = PostgresProfile#Backend
 

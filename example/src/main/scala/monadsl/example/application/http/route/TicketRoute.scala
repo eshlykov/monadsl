@@ -4,28 +4,28 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{RequestContext, Route, RouteResult}
 import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
 import io.swagger.v3.oas.annotations.enums.ParameterIn
-import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import io.swagger.v3.oas.annotations.media.{Content, Schema}
 import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.{GET, POST, Path, Produces}
-import monadsl.example.application.http.protocol.{CommentDto, TicketIdDto, TicketDto, TicketProjectionDto}
+import monadsl.example.application.http.protocol.{CommentDto, TicketDto, TicketIdDto, TicketProjectionDto}
 import monadsl.example.domain.services.{TicketFactory, TicketRepository, TicketService}
+import monadsl.example.infrastructure.model.{V1, V2, Version}
 import play.api.libs.json.{JsObject, Writes}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Tag(name = "Работа с задачами без использования DSL")
-@Path("/api/v1")
-class TicketRoute(ticketFactory: TicketFactory,
-                  ticketService: TicketService,
-                  ticketRepository: TicketRepository)
-                 (implicit executionContext: ExecutionContext) extends Route {
+sealed abstract class TicketRoute[V <: Version](version: String,
+                                                ticketFactory: TicketFactory[V],
+                                                ticketService: TicketService[V],
+                                                ticketRepository: TicketRepository[V])
+                                               (implicit executionContext: ExecutionContext) extends Route {
 
   override def apply(v1: RequestContext): Future[RouteResult] = {
-    pathPrefix("api" / "v1") {
+    pathPrefix("api" / version) {
       pathPrefix("tickets") {
         path("new") {
           createTicket()
@@ -113,3 +113,29 @@ class TicketRoute(ticketFactory: TicketFactory,
 
   private implicit lazy val unitWrites: Writes[Unit] = (_: Unit) => JsObject.empty
 }
+
+@Tag(name = "API для работы с трекером задач (реализация без DSL)")
+@Path("/api/v1")
+class TicketRouteImplV1(ticketFactory: TicketFactory[V1],
+                        ticketService: TicketService[V1],
+                        ticketRepository: TicketRepository[V1])
+                       (implicit executionContext: ExecutionContext)
+  extends TicketRoute[V1](
+    version = "v1",
+    ticketFactory = ticketFactory,
+    ticketService = ticketService,
+    ticketRepository = ticketRepository
+  )
+
+@Tag(name = "API для работы с трекером задач (реализация через DSL)")
+@Path("/api/v2")
+class TicketRouteImplV2(ticketFactory: TicketFactory[V2],
+                        ticketService: TicketService[V2],
+                        ticketRepository: TicketRepository[V2])
+                       (implicit executionContext: ExecutionContext)
+  extends TicketRoute[V2](
+    version = "v2",
+    ticketFactory = ticketFactory,
+    ticketService = ticketService,
+    ticketRepository = ticketRepository
+  )

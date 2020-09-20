@@ -1,0 +1,26 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create-table-tickets-v2" author="eshlykov" dbms="postgresql">
+        <preConditions>
+            <not>
+                <tableExists tableName="tickets_v2"/>
+            </not>
+        </preConditions>
+        <sql>
+            create table tickets_v2(
+                id varchar(32) primary key,
+                name varchar(32) not null,
+                description text,
+                status varchar(32) not null,
+                comment text
+            );
+        </sql>
+        <rollback>
+            drop table tickets_v2;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

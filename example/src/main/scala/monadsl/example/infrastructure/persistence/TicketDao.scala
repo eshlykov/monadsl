@@ -1,11 +1,12 @@
 package monadsl.example.infrastructure.persistence
 
-import monadsl.example.infrastructure.model.{TicketModel, TicketRow}
+import monadsl.example.infrastructure.model.{TicketModel, TicketRow, V1, Version}
 import slick.jdbc.JdbcBackend
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.reflect.ClassTag
 
-trait TicketDao {
+trait TicketDao[V <: Version] {
   def find(id: String): Future[Option[TicketRow]]
 
   def create(id: String,
@@ -16,8 +17,9 @@ trait TicketDao {
   def updateStatus(id: String, status: String, commentOpt: Option[String]): Future[Unit]
 }
 
-class TicketDaoImpl[BackEnd <: JdbcBackend](model: TicketModel, db: BackEnd#Database)
-                                           (implicit executionContext: ExecutionContext) extends TicketDao {
+class TicketDaoImpl[V <: Version : ClassTag, BackEnd <: JdbcBackend](model: TicketModel,
+                                                                     db: BackEnd#Database)
+                                                                    (implicit executionContext: ExecutionContext) extends TicketDao[V] {
 
   import model._
   import model.api._
