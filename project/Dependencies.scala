@@ -30,6 +30,7 @@ object Example extends Dependencies {
     "io.swagger.core.v3" % "swagger-core" % swaggerCoreVersion,
     "io.swagger.core.v3" % "swagger-jaxrs2" % swaggerJaxrs2Version,
     "javax.ws.rs" % "jsr311-api" % jsr311ApiVersion,
+    "org.liquibase" % "liquibase-core" % liquibaseCoreVersion,
     "org.postgresql" % "postgresql" % postgresqlVersion,
     "org.typelevel" %% "cats-core" % catsCoreVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,

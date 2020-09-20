@@ -11,6 +11,8 @@ object Example extends App with PresentationLayer with LazyLogging {
     .newServerAt(interface = "localhost", port = 8080)
     .bind(route)
 
+  liquibaseService.initDatabase()
+
   logger.info(s"Server online at http://localhost:8080/. Press RETURN to stop...")
   StdIn.readLine()
 

@@ -16,7 +16,9 @@ class TicketServiceImpl(ticketDao: TicketDao,
     for {
       ticket <- ticketRepository.get(ticketId)
       status = ticket.status
-      _ = if (status == TicketStatuses.released) throw InvalidTicketStatusException
+      _ = if (status == TicketStatuses.released || status == TicketStatuses.trashed) {
+        throw InvalidTicketStatusException
+      }
       nextStatus = TicketStatuses(status.id + 1)
       _ <- ticketDao.updateStatus(
         id = ticket.id,

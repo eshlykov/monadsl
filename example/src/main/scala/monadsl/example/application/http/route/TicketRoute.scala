@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.{GET, POST, Path, Produces}
-import monadsl.example.application.http.protocol.{CommentDto, TicketDto, TicketProjectionDto}
+import monadsl.example.application.http.protocol.{CommentDto, TicketIdDto, TicketDto, TicketProjectionDto}
 import monadsl.example.domain.services.{TicketFactory, TicketRepository, TicketService}
 import play.api.libs.json.{JsObject, Writes}
 
@@ -51,18 +51,18 @@ class TicketRoute(ticketFactory: TicketFactory,
   )
   @Produces(Array(MediaType.APPLICATION_JSON))
   @ApiResponse(
-    description = "Результат операции",
+    description = "Идентификатор задачи",
     responseCode = "200",
     content = Array(new Content(
       mediaType = MediaType.APPLICATION_JSON,
-      schema = new Schema(required = true, implementation = classOf[Unit]),
+      schema = new Schema(required = true, implementation = classOf[TicketIdDto]),
     )),
   )
   @Path("/tickets/new")
   protected def createTicket(): Route =
     (post & entity(as[TicketProjectionDto])) { body =>
       complete {
-        ticketFactory.create(body.name, body.description)
+        ticketFactory.create(body.name, body.description).map(TicketIdDto(_))
       }
     }
 

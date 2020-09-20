@@ -6,6 +6,7 @@ object Versions {
   lazy val catsCoreVersion: String = "2.1.1"
   lazy val idGeneratorVersion: String = "1.2.1"
   lazy val jsr311ApiVersion: String = "1.1.1"
+  lazy val liquibaseCoreVersion: String = "4.0.0"
   lazy val logbackClassicVersion: String = "1.2.3"
   lazy val macrosVersion: String = "2.3.6"
   lazy val playJsonVersion: String = "2.9.1"

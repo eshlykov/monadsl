@@ -3,7 +3,7 @@ package monadsl.example.infrastructure.persistence
 import monadsl.example.infrastructure.model.{TicketModel, TicketRow}
 import slick.jdbc.JdbcBackend
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait TicketDao {
   def find(id: String): Future[Option[TicketRow]]
@@ -16,14 +16,15 @@ trait TicketDao {
   def updateStatus(id: String, status: String, commentOpt: Option[String]): Future[Unit]
 }
 
-class TicketDaoImpl[BackEnd <: JdbcBackend](model: TicketModel)(implicit db: BackEnd#Database) extends TicketDao {
+class TicketDaoImpl[BackEnd <: JdbcBackend](model: TicketModel, db: BackEnd#Database)
+                                           (implicit executionContext: ExecutionContext) extends TicketDao {
 
   import model._
   import model.api._
 
   override def find(id: String): Future[Option[TicketRow]] =
     db.run {
-      findQuery(id)
+      findTicket(id)
         .result
         .headOption
     }
@@ -31,14 +32,14 @@ class TicketDaoImpl[BackEnd <: JdbcBackend](model: TicketModel)(implicit db: Bac
   override def create(id: String, name: String, descriptionOpt: Option[String], status: String): Future[Unit] =
     db.run {
       tickets += TicketRow(id, name, descriptionOpt, status, comment = None)
-    }.mapTo[Unit]
+    }.map(_ => ())
 
   override def updateStatus(id: String, status: String, commentOpt: Option[String]): Future[Unit] =
     db.run {
-      findQuery(id)
+      findTicket(id)
         .map(ticket => (ticket.status, ticket.comment))
         .update((status, commentOpt))
-    }.mapTo[Unit]
+    }.map(_ => ())
 
-  private def findQuery(id: String) = tickets.filter(_.id === id.bind)
+  private def findTicket(id: String) = tickets.filter(_.id === id.bind)
 }

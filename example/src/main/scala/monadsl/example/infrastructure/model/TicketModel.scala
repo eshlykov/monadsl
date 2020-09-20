@@ -6,10 +6,10 @@ trait TicketModel extends Model {
 
   import api._
 
-  class TicketTable(tag: Tag) extends Table[TicketRow](tag, "tickets") {
+  class TicketTable(tag: Tag) extends Table[TicketRow](tag, "tickets_v1") {
     override def * : ProvenShape[TicketRow] = (id, name, description, status, comment).mapTo[TicketRow]
 
-    def id: Rep[String] = column[String]("ticket_id", O.PrimaryKey)
+    def id: Rep[String] = column[String]("id", O.PrimaryKey)
 
     def name: Rep[String] = column[String]("name")
 
