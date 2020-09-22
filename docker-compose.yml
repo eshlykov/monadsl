@@ -1,14 +1,14 @@
 version: "3"
 services:
-  example:
-    container_name: example_local
+  tracker:
+    container_name: tracker_local
     build:
-      context: ./example/target/docker
+      context: ./example/tracker/target/docker
       dockerfile: Dockerfile
     tty: true
     network_mode: host
     env_file:
-      - ./example/local.env
+      - ./example/tracker/local.env
     depends_on:
       - postgres
   postgres:
@@ -16,4 +16,4 @@ services:
     image: postgres:13
     network_mode: host
     env_file:
-      - ./example/local.env
+      - ./example/tracker/local.env

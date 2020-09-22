@@ -13,7 +13,7 @@ object Monadsl extends Dependencies {
   )
 }
 
-object Example extends Dependencies {
+object Tracker extends Dependencies {
   override val dependencies: Seq[ModuleID] = Seq(
     "ch.qos.logback" % "logback-classic" % logbackClassicVersion,
     "com.github.swagger-akka-http" %% "swagger-scala-module" % swaggerScalaModuleVersion,

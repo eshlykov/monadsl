@@ -11,9 +11,9 @@ lazy val monadsl = (project in file("."))
     libraryDependencies ++= Monadsl.dependencies
   }
 
-lazy val example = (project in file("example"))
+lazy val tracker = (project in file("example/tracker"))
   .settings {
-    libraryDependencies ++= Example.dependencies
+    libraryDependencies ++= Tracker.dependencies
   }
   .enableDockerPlugin
   .dependsOn(monadsl)
