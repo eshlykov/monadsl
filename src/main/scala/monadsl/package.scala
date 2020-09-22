@@ -1,8 +1,6 @@
-package monadsl
-
 import cats.{Monad, Monoid}
 
-object Conditionals {
+package object monadsl {
 
   sealed trait Condition {
     def and(that: Condition): Condition
@@ -38,18 +36,8 @@ object Conditionals {
     override def or(that: Condition): Condition = if (cond) new ConditionT(cond = true) else that
   }
 
-  object Condition {
-    def when[F[_], T](cond: Condition)(ifAction: F[T])(implicit F: Monad[F]): Alternative[F, T] = new Alternative(cond, ifAction)
-
-    def not[F[_]](cond: Condition)(implicit F: Monad[F]): Condition =
-      cond match {
-        case m: ConditionF[F] => new ConditionF(F.map(m.cond)(!_))
-        case v: ConditionT[F] => new ConditionT(!v.cond)
-      }
-  }
-
-  class Alternative[F[_], T](cond: Condition, ifAction: F[T])(implicit F: Monad[F]) {
-    def otherwise(elseAction: F[T]): F[T] =
+  class Alternative[F[_], T](cond: Condition, ifAction: => F[T])(implicit F: Monad[F]) {
+    def otherwise(elseAction: => F[T]): F[T] =
       cond match {
         case m: ConditionF[F] =>
           F.flatMap(m.cond) {
@@ -60,6 +48,22 @@ object Conditionals {
           if (v.cond) ifAction else elseAction
       }
   }
+
+  implicit class Equaler[F[_], T](val action: F[T]) extends AnyVal {
+    def is(value: T)(implicit F: Monad[F]): F[Boolean] = F.map(action) {
+      x =>
+        println(x, value, x == value)
+        x == value
+    }
+  }
+
+  def when[F[_], T](cond: Condition)(ifAction: => F[T])(implicit F: Monad[F]): Alternative[F, T] = new Alternative(cond, ifAction)
+
+  def not[F[_]](cond: Condition)(implicit F: Monad[F]): Condition =
+    cond match {
+      case m: ConditionF[F] => new ConditionF(F.map(m.cond)(!_))
+      case v: ConditionT[F] => new ConditionT(!v.cond)
+    }
 
   implicit def toConditionF[F[_]](f: F[Boolean])(implicit F: Monad[F]): Condition = new ConditionF(f)
 

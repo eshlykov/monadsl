@@ -4,7 +4,7 @@ name := "monadsl"
 
 version := "0.1"
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.12.12"
 
 lazy val monadsl = (project in file("."))
   .settings {
@@ -16,3 +16,4 @@ lazy val example = (project in file("example"))
     libraryDependencies ++= Example.dependencies
   }
   .enableDockerPlugin
+  .dependsOn(monadsl)

@@ -18,5 +18,5 @@ class TicketRepositoryImpl[V <: Version](ticketDao: TicketDao[V])
   override def get(ticketId: String): Future[Ticket] =
     OptionT(ticketDao.find(ticketId))
       .map(Ticket(_))
-      .getOrElse(throw TicketNotFoundException)
+      .getOrElse(throw new TicketNotFoundException)
 }
