@@ -50,11 +50,7 @@ package object monadsl {
   }
 
   implicit class Equaler[F[_], T](val action: F[T]) extends AnyVal {
-    def is(value: T)(implicit F: Monad[F]): F[Boolean] = F.map(action) {
-      x =>
-        println(x, value, x == value)
-        x == value
-    }
+    def is(value: T)(implicit F: Monad[F]): F[Boolean] = F.map(action)(_ == value)
   }
 
   def when[F[_], T](cond: Condition)(ifAction: => F[T])(implicit F: Monad[F]): Alternative[F, T] = new Alternative(cond, ifAction)
