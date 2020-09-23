@@ -35,6 +35,8 @@ object Tracker extends Dependencies {
     "org.typelevel" %% "cats-core" % catsCoreVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
     "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
+    "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpTestkitVersion % Test,
+    "com.typesafe.akka" %% "akka-testkit" % akkaTestkitVersion % Test,
     "org.scalamock" %% "scalamock" % scalamockVersion % Test,
     "org.scalatest" %% "scalatest" % scalatestVersion % Test
   )

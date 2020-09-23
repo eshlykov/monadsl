@@ -18,23 +18,20 @@ import tracker.infrastructure.model.{V1, V2, Version}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-sealed abstract class TicketRoute[V <: Version](version: String,
-                                                ticketFactory: TicketFactory[V],
+sealed class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
                                                 ticketService: TicketService[V],
                                                 ticketRepository: TicketRepository[V])
                                                (implicit executionContext: ExecutionContext) extends Route {
 
   override def apply(v1: RequestContext): Future[RouteResult] = {
-    pathPrefix("api" / version) {
-      pathPrefix("tickets") {
-        path("new") {
-          createTicket()
-        } ~ pathPrefix(Segment) { ticketId =>
-          pathEnd {
-            getTicket(ticketId)
-          } ~ path("pass") {
-            passStage(ticketId)
-          }
+    pathPrefix("tickets") {
+      path("new") {
+        createTicket()
+      } ~ pathPrefix(Segment) { ticketId =>
+        pathEnd {
+          getTicket(ticketId)
+        } ~ path("pass") {
+          passStage(ticketId)
         }
       }
     }
@@ -120,12 +117,14 @@ class TicketRouteImplV1(ticketFactory: TicketFactory[V1],
                         ticketService: TicketService[V1],
                         ticketRepository: TicketRepository[V1])
                        (implicit executionContext: ExecutionContext)
-  extends TicketRoute[V1](
-    version = "v1",
-    ticketFactory = ticketFactory,
-    ticketService = ticketService,
-    ticketRepository = ticketRepository
-  )
+  extends TicketRoute[V1](ticketFactory, ticketService, ticketRepository) {
+
+  override def apply(v1: RequestContext): Future[RouteResult] = {
+    pathPrefix("api" / "v1") {
+      super.apply
+    }
+  }.apply(v1)
+}
 
 @Tag(name = "API для работы с трекером задач (реализация через DSL)")
 @Path("/api/v2")
@@ -133,9 +132,11 @@ class TicketRouteImplV2(ticketFactory: TicketFactory[V2],
                         ticketService: TicketService[V2],
                         ticketRepository: TicketRepository[V2])
                        (implicit executionContext: ExecutionContext)
-  extends TicketRoute[V2](
-    version = "v2",
-    ticketFactory = ticketFactory,
-    ticketService = ticketService,
-    ticketRepository = ticketRepository
-  )
+  extends TicketRoute[V2](ticketFactory, ticketService, ticketRepository) {
+
+  override def apply(v1: RequestContext): Future[RouteResult] = {
+    pathPrefix("api" / "v2") {
+      super.apply
+    }
+  }.apply(v1)
+}

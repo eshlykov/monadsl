@@ -1,8 +1,10 @@
 object Versions {
   lazy val akkaActorVersion: String = akkaVersion
   lazy val akkaHttpPlayJsonVersion: String = "1.31.0"
+  lazy val akkaHttpTestkitVersion: String = akkaHttpVersion
   lazy val akkaHttpVersion: String = "10.2.0"
   lazy val akkaStreamVersion: String = akkaVersion
+  lazy val akkaTestkitVersion: String = akkaVersion
   lazy val catsCoreVersion: String = "2.1.1"
   lazy val idGeneratorVersion: String = "1.2.1"
   lazy val jsr311apiVersion: String = "1.1.1"
