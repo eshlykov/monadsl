@@ -8,7 +8,7 @@ package object monadsl {
     def or(that: Condition): Condition
   }
 
-  private class ConditionF[F[_]](val cond: F[Boolean])(implicit F: Monad[F]) extends Condition {
+  class ConditionF[F[_]](val cond: F[Boolean])(implicit F: Monad[F]) extends Condition {
     override def and(that: Condition): Condition = new ConditionF[F](
       F.flatMap(cond) {
         case true => toF(that)
@@ -30,7 +30,7 @@ package object monadsl {
       }
   }
 
-  private class ConditionT[F[_]](val cond: Boolean)(implicit F: Monad[F]) extends Condition {
+  class ConditionT[F[_]](val cond: Boolean)(implicit F: Monad[F]) extends Condition {
     override def and(that: Condition): Condition = if (cond) that else new ConditionT(cond = false)
 
     override def or(that: Condition): Condition = if (cond) new ConditionT(cond = true) else that
