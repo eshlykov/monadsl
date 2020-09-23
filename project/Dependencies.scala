@@ -34,6 +34,7 @@ object Tracker extends Dependencies {
     "org.postgresql" % "postgresql" % postgresqlVersion,
     "org.typelevel" %% "cats-core" % catsCoreVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
-    "org.webjars" % "webjars-locator" % webjarsLocatorVersion
+    "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
+    "org.scalatest" %% "scalatest" % scalatestVersion % "test"
   )
 }
