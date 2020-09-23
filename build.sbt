@@ -1,5 +1,5 @@
 import DockerProject._
-import scoverage.ScoverageKeys.{coverageExcludedPackages, coverageEnabled}
+import scoverage.ScoverageKeys.coverageExcludedPackages
 
 name := "monadsl"
 
