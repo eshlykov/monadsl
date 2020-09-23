@@ -1,9 +1,10 @@
 package util.mock
 
 import akka.actor.ActorSystem
+import akka.http.scaladsl.server.Route
 import org.scalamock.scalatest.MockFactory
 import tracker.domain.services.{TicketFactory, TicketRepository, TicketService}
-import tracker.infrastructure.model.{V1, V2, Version}
+import tracker.infrastructure.model.{V1, V2}
 import tracker.infrastructure.persistence.TicketDao
 import util.helpers.IdGeneratorService
 
@@ -25,6 +26,8 @@ trait MockWiringFactory extends MockFactory {
     lazy val mockTicketRepositoryV2: TicketRepository[V2] = mock[TicketRepository[V2]]
     lazy val mockTicketServiceV1: TicketService[V1] = mock[TicketService[V1]]
     lazy val mockTicketServiceV2: TicketService[V2] = mock[TicketService[V2]]
+
+    lazy val mockRoute: Route = mock[Route]
   }
 
   private lazy val system: ActorSystem = ActorSystem()

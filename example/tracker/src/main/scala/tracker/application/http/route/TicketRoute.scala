@@ -18,10 +18,10 @@ import tracker.infrastructure.model.{V1, V2, Version}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-sealed class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
-                                                ticketService: TicketService[V],
-                                                ticketRepository: TicketRepository[V])
-                                               (implicit executionContext: ExecutionContext) extends Route {
+class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
+                                ticketService: TicketService[V],
+                                ticketRepository: TicketRepository[V])
+                               (implicit executionContext: ExecutionContext) extends Route {
 
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("tickets") {
@@ -113,30 +113,20 @@ sealed class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
 
 @Tag(name = "API для работы с трекером задач (реализация без DSL)")
 @Path("/api/v1")
-class TicketRouteImplV1(ticketFactory: TicketFactory[V1],
-                        ticketService: TicketService[V1],
-                        ticketRepository: TicketRepository[V1])
-                       (implicit executionContext: ExecutionContext)
-  extends TicketRoute[V1](ticketFactory, ticketService, ticketRepository) {
-
+class TicketRouteV1(route: Route) extends Route {
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("api" / "v1") {
-      super.apply
+      route.apply
     }
   }.apply(v1)
 }
 
 @Tag(name = "API для работы с трекером задач (реализация через DSL)")
 @Path("/api/v2")
-class TicketRouteImplV2(ticketFactory: TicketFactory[V2],
-                        ticketService: TicketService[V2],
-                        ticketRepository: TicketRepository[V2])
-                       (implicit executionContext: ExecutionContext)
-  extends TicketRoute[V2](ticketFactory, ticketService, ticketRepository) {
-
+class TicketRouteV2(route: Route) extends Route {
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("api" / "v2") {
-      super.apply
+      route.apply
     }
   }.apply(v1)
 }

@@ -1,4 +1,5 @@
 import DockerProject._
+import scoverage.ScoverageKeys.coverageExcludedPackages
 
 name := "monadsl"
 
@@ -14,7 +15,8 @@ lazy val monadsl = (project in file("."))
 lazy val tracker = (project in file("example/tracker"))
   .settings(
     libraryDependencies ++= Tracker.dependencies,
-    javaOptions += "-Dconfig.resource/application.conf"
+    javaOptions += "-Dconfig.resource/application.conf",
+    coverageExcludedPackages := ".*Layer;.*Tracker;util\\..*"
   )
   .enableDockerPlugin
   .dependsOn(monadsl)
