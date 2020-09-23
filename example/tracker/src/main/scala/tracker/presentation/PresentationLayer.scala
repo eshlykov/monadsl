@@ -6,7 +6,7 @@ import io.swagger.v3.core.util.Yaml
 import io.swagger.v3.jaxrs2.Reader
 import io.swagger.v3.oas.integration.SwaggerConfiguration
 import tracker.application.ApplicationLayer
-import tracker.presentation.http.route.SwaggerUiRoute
+import util.swagger.route.SwaggerUiRoute
 
 import scala.collection.JavaConverters._
 

@@ -1,11 +1,11 @@
-package tracker.presentation.http.route
+package util.swagger.route
 
 import akka.http.scaladsl.model.Uri.Path
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{RequestContext, Route, RouteResult}
 import org.webjars.WebJarAssetLocator
-import tracker.presentation.http.model.CustomContentTypes
+import util.swagger.model.CustomContentTypes
 
 import scala.concurrent.Future
 import scala.io.Source

@@ -1,6 +1,7 @@
 package tracker.infrastructure.model
 
 import slick.lifted.ProvenShape
+import util.database.model.Model
 
 import scala.reflect.{ClassTag, classTag}
 

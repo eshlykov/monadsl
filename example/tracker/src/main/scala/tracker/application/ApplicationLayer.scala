@@ -7,8 +7,8 @@ import tracker.domain.DomainLayer
 import tracker.infrastructure.model.{V1, V2}
 
 trait ApplicationLayer extends DomainLayer {
-  lazy val applicationRoutes: Seq[Route] = Seq(ticketV1route, ticketV2route)
+  lazy val applicationRoutes: Seq[Route] = Seq(ticketRouteV1, ticketRouteV2)
 
-  private lazy val ticketV1route: TicketRoute[V1] = wire[TicketRouteImplV1]
-  private lazy val ticketV2route: TicketRoute[V2] = wire[TicketRouteImplV2]
+  private lazy val ticketRouteV1: TicketRoute[V1] = wire[TicketRouteImplV1]
+  private lazy val ticketRouteV2: TicketRoute[V2] = wire[TicketRouteImplV2]
 }

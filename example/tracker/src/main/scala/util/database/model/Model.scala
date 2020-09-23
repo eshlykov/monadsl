@@ -1,4 +1,4 @@
-package tracker.infrastructure.model
+package util.database.model
 
 import slick.jdbc.JdbcProfile
 

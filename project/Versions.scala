@@ -12,6 +12,7 @@ object Versions {
   lazy val playJsonVersion: String = "2.9.1"
   lazy val postgresqlVersion: String = "42.2.16"
   lazy val scalaLoggingVersion: String = "3.9.2"
+  lazy val scalamockVersion: String = "5.0.0"
   lazy val scalatestVersion: String = "3.2.0"
   lazy val slickHikaricpVersion: String = slickVersion
   lazy val slickVersion: String = "3.3.3"

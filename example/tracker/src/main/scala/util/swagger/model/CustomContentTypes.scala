@@ -1,4 +1,4 @@
-package tracker.presentation.http.model
+package util.swagger.model
 
 import akka.http.scaladsl.model.{HttpCharsets, MediaType}
 

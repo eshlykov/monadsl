@@ -1,15 +1,10 @@
 package tracker.domain.entities
 
-import akka.actor.FSM.Failure
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 import tracker.domain.values.{InvalidTicketStatusException, TicketStatuses}
 import tracker.infrastructure.model.TicketRow
+import util.TestBase
 
-import scala.util.Try
-
-
-class TicketTest extends AnyFlatSpec with Matchers {
+class TicketTest extends TestBase {
   "apply" should "transform database row into domain object" in {
     Ticket.apply(ticketRow) shouldBe ticket
   }
@@ -17,7 +12,7 @@ class TicketTest extends AnyFlatSpec with Matchers {
   it should "fail with InvalidTicketStatusException if database status is invalid" in {
     val corruptedTicketRow = ticketRow.copy(status = "status")
 
-    Try(Ticket.apply(corruptedTicketRow)).failed.get shouldBe an[InvalidTicketStatusException]
+    Ticket.apply(corruptedTicketRow).shouldFailWith[InvalidTicketStatusException]
   }
 
   private lazy val ticketRow = TicketRow(

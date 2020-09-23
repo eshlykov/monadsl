@@ -12,8 +12,9 @@ lazy val monadsl = (project in file("."))
   }
 
 lazy val tracker = (project in file("example/tracker"))
-  .settings {
-    libraryDependencies ++= Tracker.dependencies
-  }
+  .settings(
+    libraryDependencies ++= Tracker.dependencies,
+    javaOptions += "-Dconfig.resource/application.conf"
+  )
   .enableDockerPlugin
   .dependsOn(monadsl)

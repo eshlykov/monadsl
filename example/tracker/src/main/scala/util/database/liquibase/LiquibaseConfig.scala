@@ -1,4 +1,4 @@
-package tracker.infrastructure.liquibase
+package util.database.liquibase
 
 import com.typesafe.config.Config
 

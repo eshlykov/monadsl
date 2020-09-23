@@ -9,7 +9,7 @@ trait Dependencies {
 object Monadsl extends Dependencies {
   override val dependencies: Seq[ModuleID] = Seq(
     "org.typelevel" %% "cats-core" % catsCoreVersion,
-    "org.scalatest" %% "scalatest" % scalatestVersion % "test"
+    "org.scalatest" %% "scalatest" % scalatestVersion % Test
   )
 }
 
@@ -35,6 +35,7 @@ object Tracker extends Dependencies {
     "org.typelevel" %% "cats-core" % catsCoreVersion,
     "org.webjars" % "swagger-ui" % swaggerUiVersion,
     "org.webjars" % "webjars-locator" % webjarsLocatorVersion,
-    "org.scalatest" %% "scalatest" % scalatestVersion % "test"
+    "org.scalamock" %% "scalamock" % scalamockVersion % Test,
+    "org.scalatest" %% "scalatest" % scalatestVersion % Test
   )
 }
