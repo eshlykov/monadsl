@@ -1,5 +1,8 @@
 # monadsl
 
+[![Travis (.org)](https://img.shields.io/travis/eshlykov/monadsl.svg)](https://travis-ci.org/eshlykov/monadls)
+[![codecov](https://codecov.io/gh/eshlykov/monadsl/branch/master/graph/badge.svg)](https://codecov.io/gh/eshlykov/monadsl)
+
 ## О проекте
 
 **monadsl** — библиотека, предоставляющая внутренний DSL на Scala, с помощью которого можно легко выражать ветвление и прочие управляющие конструкции для монадических вычислений.
@@ -46,8 +49,8 @@ when (e1) e2 otherwise e3
 
 ## To Do
 
-- [ ] Юнит-тесты и расчет покрытия.
-- [ ] CI.
+- [x] Юнит-тесты и расчет покрытия.
+- [x] CI.
 - [ ] Расширить API для более полной демонстрации.
 - [ ] Скрипт для проверки эквивалентности таблиц в базе данных.
 - [ ] Написат exception handler для красивого отображения ошибок.
