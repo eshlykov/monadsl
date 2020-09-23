@@ -2,7 +2,7 @@ package tracker.domain.services
 
 import cats.instances.future._
 import monadsl._
-import tracker.domain.values.{InvalidTicketStatusException, TicketStatuses}
+import tracker.domain.values.{InvalidTicketStageException, TicketStages}
 import tracker.infrastructure.model.{V1, V2, Version}
 import tracker.infrastructure.persistence.TicketDao
 
@@ -18,14 +18,14 @@ class TicketServiceImplV1(ticketDao: TicketDao[V1],
   override def passCurrentStage(ticketId: String, commentOpt: Option[String]): Future[Unit] =
     for {
       ticket <- ticketRepository.get(ticketId)
-      status = ticket.status
-      _ = if (status == TicketStatuses.released || status == TicketStatuses.trashed) {
-        throw new InvalidTicketStatusException
+      stage = ticket.stage
+      _ = if (stage == TicketStages.released || stage == TicketStages.trashed) {
+        throw new InvalidTicketStageException
       }
-      nextStatus = TicketStatuses(status.id + 1)
-      _ <- ticketDao.updateStatus(
+      nextStage = TicketStages(stage.id + 1)
+      _ <- ticketDao.updateStage(
         id = ticketId,
-        status = nextStatus.toString,
+        stage = nextStage.toString,
         commentOpt = commentOpt.orElse(ticket.commentOpt)
       )
     } yield ()
@@ -36,16 +36,16 @@ class TicketServiceImplV2(ticketDao: TicketDao[V2],
                          (implicit executionContext: ExecutionContext) extends TicketService[V2] {
   override def passCurrentStage(ticketId: String, commentOpt: Option[String]): Future[Unit] = {
     val ticket = ticketRepository.get(ticketId)
-    val status = ticket.map(_.status)
-    when((status is TicketStatuses.released) or (status is TicketStatuses.trashed)) {
-      Future.failed(throw new InvalidTicketStatusException)
+    val stage = ticket.map(_.stage)
+    when((stage is TicketStages.released) or (stage is TicketStages.trashed)) {
+      Future.failed(throw new InvalidTicketStageException)
     } otherwise {
       for {
-        nextStatus <- status.map(status => TicketStatuses(status.id + 1))
+        nextStage <- stage.map(stage => TicketStages(stage.id + 1))
         currentCommentOpt <- ticket.map(_.commentOpt)
-        _ <- ticketDao.updateStatus(
+        _ <- ticketDao.updateStage(
           id = ticketId,
-          status = nextStatus.toString,
+          stage = nextStage.toString,
           commentOpt = commentOpt.orElse(currentCommentOpt)
         )
       } yield ()

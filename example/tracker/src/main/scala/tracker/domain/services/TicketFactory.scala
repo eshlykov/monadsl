@@ -1,6 +1,6 @@
 package tracker.domain.services
 
-import tracker.domain.values.TicketStatuses
+import tracker.domain.values.TicketStages
 import tracker.infrastructure.model.Version
 import tracker.infrastructure.persistence.TicketDao
 import util.helpers.IdGeneratorService
@@ -20,7 +20,7 @@ class TicketFactoryImpl[V <: Version](ticketDao: TicketDao[V],
       id = id,
       name = name,
       descriptionOpt = descriptionOpt,
-      status = TicketStatuses.specification.toString
+      stage = TicketStages.specification.toString
     ).map(_ => id)
   }
 }

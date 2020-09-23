@@ -1,6 +1,6 @@
 package tracker.domain.entities
 
-import tracker.domain.values.{InvalidTicketStatusException, TicketStatuses}
+import tracker.domain.values.{InvalidTicketStageException, TicketStages}
 import tracker.infrastructure.model.TicketRow
 import util.TestBase
 
@@ -9,17 +9,17 @@ class TicketTest extends TestBase {
     Ticket.apply(ticketRow) shouldBe ticket
   }
 
-  it should "fail with InvalidTicketStatusException if database status is invalid" in {
-    val corruptedTicketRow = ticketRow.copy(status = "status")
+  it should "fail with InvalidTicketStageException if database stage is invalid" in {
+    val corruptedTicketRow = ticketRow.copy(stage = "stage")
 
-    Ticket.apply(corruptedTicketRow).shouldFailWith[InvalidTicketStatusException]
+    Ticket.apply(corruptedTicketRow).shouldFailWith[InvalidTicketStageException]
   }
 
   private lazy val ticketRow = TicketRow(
     id = "ticketId",
     name = "task",
     description = Some("description"),
-    status = "Specification",
+    stage = "Specification",
     comment = Some("comment"),
   )
 
@@ -27,7 +27,7 @@ class TicketTest extends TestBase {
     id = "ticketId",
     name = "task",
     descriptionOpt = Some("description"),
-    status = TicketStatuses.specification,
+    stage = TicketStages.specification,
     commentOpt = Some("comment"),
   )
 }

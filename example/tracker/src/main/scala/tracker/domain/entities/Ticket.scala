@@ -1,8 +1,8 @@
 package tracker.domain.entities
 
 import play.api.libs.json.{Format, Json}
-import tracker.domain.values.{InvalidTicketStatusException, TicketStatuses}
-import tracker.domain.values.TicketStatuses.TicketStatus
+import tracker.domain.values.{InvalidTicketStageException, TicketStages}
+import tracker.domain.values.TicketStages.TicketStage
 import tracker.infrastructure.model.TicketRow
 
 import scala.util.{Failure, Try}
@@ -11,7 +11,7 @@ import scala.util.{Failure, Try}
 case class Ticket(id: String,
                   name: String,
                   descriptionOpt: Option[String],
-                  status: TicketStatus,
+                  stage: TicketStage,
                   commentOpt: Option[String])
 
 object Ticket {
@@ -22,13 +22,13 @@ object Ticket {
       id = ticketRow.id,
       name = ticketRow.name,
       descriptionOpt = ticketRow.description,
-      status = toTicketStatus(ticketRow.status),
+      stage = toTicketStage(ticketRow.stage),
       commentOpt = ticketRow.comment,
     )
 
-  private implicit lazy val ticketStatusFormat: Format[TicketStatus] = Json.formatEnum(TicketStatuses)
+  private implicit lazy val ticketStageFormat: Format[TicketStage] = Json.formatEnum(TicketStages)
 
-  private def toTicketStatus(status: String): TicketStatus =
-    Try(TicketStatuses.withName(status))
-      .getOrElse(throw new InvalidTicketStatusException)
+  private def toTicketStage(stage: String): TicketStage =
+    Try(TicketStages.withName(stage))
+      .getOrElse(throw new InvalidTicketStageException)
 }

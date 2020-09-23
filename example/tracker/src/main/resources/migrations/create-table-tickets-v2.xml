@@ -14,7 +14,7 @@
                 id varchar(32) primary key,
                 name varchar(32) not null,
                 description text,
-                status varchar(32) not null,
+                stage varchar(32) not null,
                 comment text
             );
         </sql>

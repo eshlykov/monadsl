@@ -2,7 +2,7 @@ package tracker.domain.services
 
 import com.softwaremill.macwire.wire
 import tracker.domain.entities.Ticket
-import tracker.domain.values.{TicketNotFoundException, TicketStatuses}
+import tracker.domain.values.{TicketNotFoundException, TicketStages}
 import tracker.infrastructure.model.{TicketRow, V1}
 import util.TestBase
 
@@ -29,20 +29,20 @@ class TicketRepositoryImplTest extends TestBase {
 
   private lazy val id = "id"
   private lazy val name = "name"
-  private lazy val status = TicketStatuses.development
+  private lazy val stage = TicketStages.development
 
   private lazy val ticketRow = TicketRow(
     id = id,
     name = name,
     description = None,
-    status = status.toString,
+    stage = stage.toString,
     comment = None,
   )
   private lazy val ticket = Ticket(
     id = id,
     name = name,
     descriptionOpt = None,
-    status = status,
+    stage = stage,
     commentOpt = None,
   )
 

@@ -8,7 +8,7 @@ import de.heikoseeberger.akkahttpplayjson.PlayJsonSupport._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import tracker.application.http.protocol.{TicketDto, TicketIdDto}
 import tracker.domain.entities.Ticket
-import tracker.domain.values.TicketStatuses
+import tracker.domain.values.TicketStages
 import tracker.infrastructure.model.V1
 import util.RouteTestBase
 
@@ -60,6 +60,6 @@ class TicketRouteTest extends RouteTestBase {
   private lazy val description = "description"
   private lazy val comment = "comment"
 
-  private lazy val ticket = Ticket(id, name, Some(description), TicketStatuses.testing, Some(comment))
-  private lazy val ticketDto = TicketDto(id, name, Some(description), TicketStatuses.testing, Some(comment))
+  private lazy val ticket = Ticket(id, name, Some(description), TicketStages.testing, Some(comment))
+  private lazy val ticketDto = TicketDto(id, name, Some(description), TicketStages.testing, Some(comment))
 }

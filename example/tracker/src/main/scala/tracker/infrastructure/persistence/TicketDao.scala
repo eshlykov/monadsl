@@ -12,9 +12,9 @@ trait TicketDao[V <: Version] {
   def create(id: String,
              name: String,
              descriptionOpt: Option[String],
-             status: String): Future[Unit]
+             stage: String): Future[Unit]
 
-  def updateStatus(id: String, status: String, commentOpt: Option[String]): Future[Unit]
+  def updateStage(id: String, stage: String, commentOpt: Option[String]): Future[Unit]
 }
 
 class TicketDaoImpl[V <: Version : ClassTag, BackEnd <: JdbcBackend](model: TicketModel,
@@ -31,16 +31,16 @@ class TicketDaoImpl[V <: Version : ClassTag, BackEnd <: JdbcBackend](model: Tick
         .headOption
     }
 
-  override def create(id: String, name: String, descriptionOpt: Option[String], status: String): Future[Unit] =
+  override def create(id: String, name: String, descriptionOpt: Option[String], stage: String): Future[Unit] =
     db.run {
-      tickets += TicketRow(id, name, descriptionOpt, status, comment = None)
+      tickets += TicketRow(id, name, descriptionOpt, stage, comment = None)
     }.map(_ => ())
 
-  override def updateStatus(id: String, status: String, commentOpt: Option[String]): Future[Unit] =
+  override def updateStage(id: String, stage: String, commentOpt: Option[String]): Future[Unit] =
     db.run {
       findTicket(id)
-        .map(ticket => (ticket.status, ticket.comment))
-        .update((status, commentOpt))
+        .map(ticket => (ticket.stage, ticket.comment))
+        .update((stage, commentOpt))
     }.map(_ => ())
 
   private def findTicket(id: String) = tickets.filter(_.id === id.bind)
