@@ -13,6 +13,8 @@ trait TicketService[V <: Version] {
   def passCurrentStage(ticketId: String, commentOpt: Option[String]): Future[Unit]
 
   def returnToPreviousStage(ticketId: String, stage: TicketStage, comment: String): Future[Unit]
+
+  def trashTicket(ticketId: String, comment: String): Future[Unit]
 }
 
 class TicketServiceImplV1(ticketDao: TicketDao[V1],
@@ -49,6 +51,20 @@ class TicketServiceImplV1(ticketDao: TicketDao[V1],
         commentOpt = Some(comment)
       )
     } yield ()
+
+  override def trashTicket(ticketId: String, comment: String): Future[Unit] =
+    for {
+      ticket <- ticketRepository.get(ticketId)
+      stage = ticket.stage
+      _ = if (stage == TicketStages.trashed || stage == TicketStages.released) {
+        throw new InvalidTicketStageException
+      }
+      _ <- ticketDao.updateStage(
+        id = ticketId,
+        stage = TicketStages.trashed.toString,
+        commentOpt = Some(comment)
+      )
+    } yield ()
 }
 
 class TicketServiceImplV2(ticketDao: TicketDao[V2],
@@ -75,12 +91,26 @@ class TicketServiceImplV2(ticketDao: TicketDao[V2],
   override def returnToPreviousStage(ticketId: String, stage: TicketStage, comment: String): Future[Unit] = {
     val ticket = ticketRepository.get(ticketId)
     val oldStage = ticket.map(_.stage)
-    when((oldStage is TicketStages.released) or (oldStage is TicketStages.trashed) or (oldStage is TicketStages.specification) or (oldStage.map(_.id <= stage.id))) {
+    when(oldStage.map(_.id <= stage.id) or (stage == TicketStages.trashed) or (oldStage is TicketStages.released)) {
       Future.failed[Unit](new InvalidTicketStageException)
     } otherwise {
       ticketDao.updateStage(
         id = ticketId,
         stage = stage.toString,
+        commentOpt = Some(comment)
+      )
+    }
+  }
+
+  override def trashTicket(ticketId: String, comment: String): Future[Unit] = {
+    val ticket = ticketRepository.get(ticketId)
+    val stage = ticket.map(_.stage)
+    when((stage is TicketStages.trashed) or (stage is TicketStages.released)) {
+      Future.failed[Unit](new InvalidTicketStageException)
+    } otherwise {
+      ticketDao.updateStage(
+        id = ticketId,
+        stage = TicketStages.trashed.toString,
         commentOpt = Some(comment)
       )
     }

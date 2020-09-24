@@ -111,6 +111,38 @@ class TicketServiceImplV2Test extends TestBase {
     service.returnToPreviousStage(id, TicketStages.ready, newComment).shouldFailWith[InvalidTicketStageException]
   }
 
+  "trashTicket" should "change stage to Trashed" in new Wiring {
+    (mockTicketRepositoryV2.get _)
+      .expects(id)
+      .returnsAsync(ticket)
+
+    (mockTicketDaoV2.updateStage _)
+      .expects(id, TicketStages.trashed.toString, Some(newComment))
+      .returnsUnitAsync
+
+    service.trashTicket(id, newComment).shouldSucceed
+  }
+
+  it should "fail with InvalidTicketStageException if ticket is in Trashed stage" in new Wiring {
+    val trashedTicket: Ticket = ticket.copy(stage = TicketStages.trashed)
+
+    (mockTicketRepositoryV2.get _)
+      .expects(id)
+      .returnsAsync(trashedTicket)
+
+    service.trashTicket(id, newComment).shouldFailWith[InvalidTicketStageException]
+  }
+
+  it should "fail with InvalidTicketStageException if ticket is in Released stage" in new Wiring {
+    val releasedTicket: Ticket = ticket.copy(stage = TicketStages.released)
+
+    (mockTicketRepositoryV2.get _)
+      .expects(id)
+      .returnsAsync(releasedTicket)
+
+    service.trashTicket(id, newComment).shouldFailWith[InvalidTicketStageException]
+  }
+
   private trait Wiring extends MockWiring {
     lazy val service: TicketService[V2] = wire[TicketServiceImplV2]
   }

@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.{GET, POST, Path, Produces}
 import play.api.libs.json.{JsObject, Writes}
-import tracker.application.http.protocol.{CommentDto, RejectionRequestDto, TicketDto, TicketIdDto, TicketProjectionDto}
+import tracker.application.http.protocol.{CommentDto, CommentRequiredDto, RejectionRequestDto, TicketDto, TicketIdDto, TicketProjectionDto}
 import tracker.domain.services.{TicketFactory, TicketRepository, TicketService}
 import tracker.infrastructure.model.{V1, V2, Version}
 
@@ -141,6 +141,13 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
   @POST
   @Operation(summary = "Удалить задачу из бэклога")
   @Produces(Array(MediaType.APPLICATION_JSON))
+  @RequestBody(
+    content = Array(new Content(
+      mediaType = MediaType.APPLICATION_JSON,
+      schema = new Schema(required = true, implementation = classOf[CommentRequiredDto]),
+    )),
+    required = true,
+  )
   @ApiResponse(
     description = "Результат операции",
     responseCode = "200",
@@ -151,9 +158,9 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
   )
   @Path("/tickets/{ticketId}/reject")
   protected def trashTicket(@Parameter(name = "ticketId", in = ParameterIn.PATH, required = true) ticketId: String): Route =
-    post {
+    (post & entity(as[CommentRequiredDto])) { body =>
       complete {
-        ???
+        ticketService.trashTicket(ticketId, body.comment)
       }
     }
 

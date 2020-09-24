@@ -5,8 +5,8 @@ import play.api.libs.json.{Format, Json}
 import tracker.domain.values.TicketStages
 import tracker.domain.values.TicketStages.TicketStage
 
-case class RejectionRequestDto(@Schema(description = "Целевая стадия задача", implementation = classOf[String]) stage: TicketStage,
-                               @Schema(description = "Коммантарий") comment: String)
+case class RejectionRequestDto(@Schema(description = "Целевая стадия задача", required = true, implementation = classOf[String]) stage: TicketStage,
+                               @Schema(description = "Коммантарий", required = true) comment: String)
 
 object RejectionRequestDto {
   implicit lazy val rejectionRequestDtoFormat: Format[RejectionRequestDto] = Json.format[RejectionRequestDto]
