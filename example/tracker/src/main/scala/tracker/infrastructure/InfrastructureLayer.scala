@@ -31,6 +31,6 @@ trait InfrastructureLayer {
 
   private lazy val database: BackEnd#Database = model.api.Database.forConfig(path = "tracker-db")
 
-  private val config= ConfigFactory.load()
+  private val config = ConfigFactory.load()
   private val liquibaseConfig = LiquibaseConfig(config)
 }

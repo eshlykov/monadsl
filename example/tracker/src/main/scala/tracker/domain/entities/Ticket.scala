@@ -1,12 +1,11 @@
 package tracker.domain.entities
 
 import play.api.libs.json.{Format, Json}
-import tracker.domain.values.{InvalidTicketStageException, TicketStages}
 import tracker.domain.values.TicketStages.TicketStage
+import tracker.domain.values.{InvalidTicketStageException, TicketStages}
 import tracker.infrastructure.model.TicketRow
 
-import scala.util.{Failure, Try}
-
+import scala.util.Try
 
 case class Ticket(id: String,
                   name: String,

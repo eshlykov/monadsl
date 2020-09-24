@@ -22,4 +22,5 @@ class TicketRouteV2Test extends RouteTestBase {
   private trait Wiring extends MockWiring {
     lazy val route: Route = wire[TicketRouteV2]
   }
+
 }

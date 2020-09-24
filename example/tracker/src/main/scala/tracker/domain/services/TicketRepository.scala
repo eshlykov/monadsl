@@ -15,7 +15,7 @@ trait TicketRepository[V <: Version] {
 }
 
 class TicketRepositoryImpl[V <: Version](ticketDao: TicketDao[V])
-                          (implicit executionContext: ExecutionContext) extends TicketRepository[V] {
+                                        (implicit executionContext: ExecutionContext) extends TicketRepository[V] {
   override def get(ticketId: String): Future[Ticket] =
     OptionT(ticketDao.find(ticketId))
       .map(entities.Ticket(_))

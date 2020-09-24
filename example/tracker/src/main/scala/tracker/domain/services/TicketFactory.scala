@@ -12,7 +12,7 @@ trait TicketFactory[V <: Version] {
 }
 
 class TicketFactoryImpl[V <: Version](ticketDao: TicketDao[V],
-                                     idGeneratorService: IdGeneratorService)
+                                      idGeneratorService: IdGeneratorService)
                                      (implicit executionContext: ExecutionContext) extends TicketFactory[V] {
   override def create(name: String, descriptionOpt: Option[String]): Future[String] = {
     val id = idGeneratorService.nextId()
