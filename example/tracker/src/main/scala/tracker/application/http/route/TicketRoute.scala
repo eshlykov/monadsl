@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.{GET, POST, Path, Produces}
 import play.api.libs.json.{JsObject, Writes}
-import tracker.application.http.protocol.{CommentDto, TicketDto, TicketIdDto, TicketProjectionDto}
+import tracker.application.http.protocol.{CommentDto, RejectionRequestDto, TicketDto, TicketIdDto, TicketProjectionDto}
 import tracker.domain.services.{TicketFactory, TicketRepository, TicketService}
 import tracker.infrastructure.model.{V1, V2, Version}
 
@@ -32,6 +32,10 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
           getTicket(ticketId)
         } ~ path("pass") {
           passStage(ticketId)
+        } ~ path("reject") {
+          rejectStage(ticketId)
+        } ~ path("trash") {
+          trashTicket(ticketId)
         }
       }
     }
@@ -105,6 +109,51 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
     (post & entity(as[CommentDto])) { body =>
       complete {
         ticketService.passCurrentStage(ticketId, body.comment)
+      }
+    }
+
+  @POST
+  @Operation(summary = "Вернуть задачу на предыдущую стадию")
+  @RequestBody(
+    content = Array(new Content(
+      mediaType = MediaType.APPLICATION_JSON,
+      schema = new Schema(required = true, implementation = classOf[RejectionRequestDto])
+    )),
+    required = true,
+  )
+  @Produces(Array(MediaType.APPLICATION_JSON))
+  @ApiResponse(
+    description = "Результат операции",
+    responseCode = "200",
+    content = Array(new Content(
+      mediaType = MediaType.APPLICATION_JSON,
+      schema = new Schema(required = true, implementation = classOf[Unit])
+    ))
+  )
+  @Path("/tickets/{ticketId}/reject")
+  protected def rejectStage(@Parameter(name = "ticketId", in = ParameterIn.PATH, required = true) ticketId: String): Route =
+    (post & entity(as[RejectionRequestDto])) { body =>
+      complete {
+        ticketService.returnToPreviousStage(ticketId, body.stage, body.comment)
+      }
+    }
+
+  @POST
+  @Operation(summary = "Удалить задачу из бэклога")
+  @Produces(Array(MediaType.APPLICATION_JSON))
+  @ApiResponse(
+    description = "Результат операции",
+    responseCode = "200",
+    content = Array(new Content(
+      mediaType = MediaType.APPLICATION_JSON,
+      schema = new Schema(required = true, implementation = classOf[Unit])
+    ))
+  )
+  @Path("/tickets/{ticketId}/reject")
+  protected def trashTicket(@Parameter(name = "ticketId", in = ParameterIn.PATH, required = true) ticketId: String): Route =
+    post {
+      complete {
+        ???
       }
     }
 

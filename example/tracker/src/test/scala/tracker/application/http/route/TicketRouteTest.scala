@@ -38,7 +38,7 @@ class TicketRouteTest extends RouteTestBase {
     }
   }
 
-  "POST /ticket/{id}pass" should "update ticket's stage" in new Wiring {
+  "POST /ticket/{id}/pass" should "update ticket's stage" in new Wiring {
     val body: JsValue = Json.obj("comment" -> comment)
 
     (mockTicketServiceV1.passCurrentStage _)
@@ -49,6 +49,22 @@ class TicketRouteTest extends RouteTestBase {
       status shouldBe OK
       responseAs[JsValue] shouldBe JsObject.empty
     }
+  }
+
+  "POST /ticket/{id}/reject" should "update ticket's stage" in new Wiring {
+    val body: JsValue = Json.obj("stage" -> TicketStages.specification.toString, "comment" -> comment)
+
+    (mockTicketServiceV1.returnToPreviousStage _)
+      .expects(id, TicketStages.specification, comment)
+      .returnsUnitAsync
+
+    Post(Uri(s"/tickets/$id/reject"), body) ~> route ~> check {
+      status shouldBe OK
+      responseAs[JsValue] shouldBe JsObject.empty
+    }
+  }
+
+  "POST /ticket/{id}/trash" should "update ticket's stage" in new Wiring {
   }
 
   private trait Wiring extends MockWiring {
