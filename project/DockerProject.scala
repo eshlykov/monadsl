@@ -7,7 +7,7 @@ import sbtdocker.{DockerPlugin, Dockerfile}
 
 object DockerProject {
 
-  implicit class ProjectPimp(val project: Project) extends AnyVal {
+  implicit class ProjectOps(val project: Project) extends AnyVal {
     def enableDockerPlugin: Project = project
       .enablePlugins(DockerPlugin, JavaAppPackaging)
       .settings {

@@ -13,14 +13,14 @@ lazy val root = (project in file("."))
 lazy val monadsl = (project in file("monadsl"))
   .settings(
     libraryDependencies ++= Monadsl.dependencies,
-    coverageEnabled := true,
+    coverageEnabled in Test := true,
   )
 
 lazy val tracker = (project in file("example/tracker"))
   .settings(
     libraryDependencies ++= Tracker.dependencies,
     javaOptions += "-Dconfig.resource/application.conf",
-    coverageEnabled := true,
+    coverageEnabled in Test := true,
     coverageExcludedPackages := ".*Layer;.*Tracker;util\\..*",
   )
   .enableDockerPlugin
