@@ -9,76 +9,75 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import tracker.application.http.protocol.{TicketDto, TicketIdDto}
 import tracker.domain.entities.Ticket
 import tracker.domain.values.TicketStages
-import tracker.infrastructure.model.V1
 import util.RouteTestBase
 
-class TicketRouteTest extends RouteTestBase {
+class TicketRouteImplV2Test extends RouteTestBase {
 
-  "POST /tickets/new" should "create new ticket" in new Wiring {
+  "POST /api/v2/tickets/new" should "create new ticket" in new Wiring {
     val body: JsValue = Json.obj("name" -> name, "description" -> description)
 
-    (mockTicketFactoryV1.create _)
+    (mockTicketFactoryV2.create _)
       .expects(name, Some(description))
       .returnsAsync(id)
 
-    Post(Uri("/tickets/new"), body) ~> route ~> check {
+    Post(Uri("/api/v2/tickets/new"), body) ~> route ~> check {
       status shouldBe OK
       responseAs[JsValue].as[TicketIdDto] shouldBe TicketIdDto(id)
     }
   }
 
-  "GET /tickets/{id}" should "return ticket" in new Wiring {
-    (mockTicketRepositoryV1.get _)
+  "GET /api/v2/tickets/{id}" should "return ticket" in new Wiring {
+    (mockTicketRepositoryV2.get _)
       .expects(id)
       .returnsAsync(ticket)
 
-    Get(Uri(s"/tickets/$id")) ~> route ~> check {
+    Get(Uri(s"/api/v2/tickets/$id")) ~> route ~> check {
       status shouldBe OK
       responseAs[JsValue].as[TicketDto] shouldBe ticketDto
     }
   }
 
-  "POST /ticket/{id}/pass" should "update ticket's stage" in new Wiring {
+  "POST /api/v2/ticket/{id}/pass" should "update ticket's stage" in new Wiring {
     val body: JsValue = Json.obj("comment" -> comment)
 
-    (mockTicketServiceV1.passCurrentStage _)
+    (mockTicketServiceV2.passCurrentStage _)
       .expects(id, Some(comment))
       .returnsUnitAsync
 
-    Post(Uri(s"/tickets/$id/pass"), body) ~> route ~> check {
+    Post(Uri(s"/api/v2/tickets/$id/pass"), body) ~> route ~> check {
       status shouldBe OK
       responseAs[JsValue] shouldBe JsObject.empty
     }
   }
 
-  "POST /ticket/{id}/reject" should "update ticket's stage" in new Wiring {
+  "POST /api/v2/ticket/{id}/reject" should "update ticket's stage" in new Wiring {
     val body: JsValue = Json.obj("stage" -> TicketStages.specification.toString, "comment" -> comment)
 
-    (mockTicketServiceV1.returnToPreviousStage _)
+    (mockTicketServiceV2.returnToPreviousStage _)
       .expects(id, TicketStages.specification, comment)
       .returnsUnitAsync
 
-    Post(Uri(s"/tickets/$id/reject"), body) ~> route ~> check {
+    Post(Uri(s"/api/v2/tickets/$id/reject"), body) ~> route ~> check {
       status shouldBe OK
       responseAs[JsValue] shouldBe JsObject.empty
     }
   }
 
-  "POST /ticket/{id}/trash" should "update ticket's stage" in new Wiring {
+  "POST /api/v2/ticket/{id}/trash" should "update ticket's stage" in new Wiring {
     val body: JsValue = Json.obj("comment" -> comment)
 
-    (mockTicketServiceV1.trashTicket _)
+    (mockTicketServiceV2.trashTicket _)
       .expects(id, comment)
       .returnsUnitAsync
 
-    Post(Uri(s"/tickets/$id/trash"), body) ~> route ~> check {
+    Post(Uri(s"/api/v2/tickets/$id/trash"), body) ~> route ~> check {
       status shouldBe OK
       responseAs[JsValue] shouldBe JsObject.empty
     }
   }
 
   private trait Wiring extends MockWiring {
-    lazy val route: Route = wire[TicketRoute[V1]]
+    lazy val route: Route = wire[TicketRouteImplV2]
   }
 
   private lazy val id = "id"

@@ -18,10 +18,10 @@ import tracker.infrastructure.model.{V1, V2, Version}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
-                                ticketService: TicketService[V],
-                                ticketRepository: TicketRepository[V])
-                               (implicit executionContext: ExecutionContext) extends Route {
+abstract class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
+                                         ticketService: TicketService[V],
+                                         ticketRepository: TicketRepository[V])
+                                        (implicit executionContext: ExecutionContext) extends Route {
 
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("tickets") {
@@ -140,7 +140,6 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
 
   @POST
   @Operation(summary = "Удалить задачу из бэклога")
-  @Produces(Array(MediaType.APPLICATION_JSON))
   @RequestBody(
     content = Array(new Content(
       mediaType = MediaType.APPLICATION_JSON,
@@ -148,6 +147,7 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
     )),
     required = true,
   )
+  @Produces(Array(MediaType.APPLICATION_JSON))
   @ApiResponse(
     description = "Результат операции",
     responseCode = "200",
@@ -156,7 +156,7 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
       schema = new Schema(required = true, implementation = classOf[Unit])
     ))
   )
-  @Path("/tickets/{ticketId}/reject")
+  @Path("/tickets/{ticketId}/trash")
   protected def trashTicket(@Parameter(name = "ticketId", in = ParameterIn.PATH, required = true) ticketId: String): Route =
     (post & entity(as[CommentRequiredDto])) { body =>
       complete {
@@ -169,20 +169,30 @@ class TicketRoute[V <: Version](ticketFactory: TicketFactory[V],
 
 @Tag(name = "API для работы с трекером задач (реализация без DSL)")
 @Path("/api/v1")
-class TicketRouteV1(route: Route) extends Route {
+class TicketRouteImplV1(ticketFactory: TicketFactory[V1],
+                        ticketService: TicketService[V1],
+                        ticketRepository: TicketRepository[V1])
+                       (implicit executionContext: ExecutionContext)
+  extends TicketRoute[V1](ticketFactory, ticketService, ticketRepository) {
+
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("api" / "v1") {
-      route.apply
+      super.apply
     }
   }.apply(v1)
 }
 
 @Tag(name = "API для работы с трекером задач (реализация через DSL)")
 @Path("/api/v2")
-class TicketRouteV2(route: Route) extends Route {
+class TicketRouteImplV2(ticketFactory: TicketFactory[V2],
+                        ticketService: TicketService[V2],
+                        ticketRepository: TicketRepository[V2])
+                       (implicit executionContext: ExecutionContext)
+  extends TicketRoute[V2](ticketFactory, ticketService, ticketRepository) {
+
   override def apply(v1: RequestContext): Future[RouteResult] = {
     pathPrefix("api" / "v2") {
-      route.apply
+      super.apply
     }
   }.apply(v1)
 }

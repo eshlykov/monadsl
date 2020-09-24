@@ -26,8 +26,6 @@ trait MockWiringFactory extends MockFactory {
     lazy val mockTicketRepositoryV2: TicketRepository[V2] = mock[TicketRepository[V2]]
     lazy val mockTicketServiceV1: TicketService[V1] = mock[TicketService[V1]]
     lazy val mockTicketServiceV2: TicketService[V2] = mock[TicketService[V2]]
-
-    lazy val mockRoute: Route = mock[Route]
   }
 
   private lazy val system: ActorSystem = ActorSystem()
